@@ -2,7 +2,7 @@ package conveyer
 
 import (
 	"encoding/json"
-	"github.com/smartystreets/assertions/internal/go-render/render"
+	"github.com/luci/go-render/render"
 )
 
 // Explain returns a structured error message for displaying in the goconvey ui
