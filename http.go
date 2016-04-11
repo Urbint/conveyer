@@ -3,6 +3,8 @@ package conveyer
 import (
 	"fmt"
 	"net/http"
+	"net/url"
+	"reflect"
 	"strings"
 )
 
@@ -39,6 +41,26 @@ func ShouldHaveQueryParam(actual interface{}, args ...interface{}) string {
 		return fmt.Sprintf(`Query parameter "%s" was missing from request`, queryParam)
 	} else if actualVal != expectedVal {
 		return Explain(`Query parameter "%s" had incorrect value`, expectedVal, actualVal, queryParam)
+	}
+
+	return ""
+}
+
+// ShouldHaveFormValues tests whether a *http.Request has the provided form values.
+func ShouldHaveFormValues(actual interface{}, args ...interface{}) string {
+	req := actual.(*http.Request)
+	vals := args[0].(url.Values)
+
+	if err := req.ParseForm(); err != nil {
+		return fmt.Sprintf("Error parsing request form: %s", err.Error())
+	}
+
+	form := req.Form
+
+	for key := range vals {
+		if !reflect.DeepEqual(vals[key], form[key]) {
+			return Explain(`Form value "%s" had incorrect value`, vals[key], form[key], key)
+		}
 	}
 
 	return ""
