@@ -8,8 +8,8 @@ import (
 // ShouldLookLike recursively examines non-zero fields and asserts
 // their equality.
 func ShouldLookLike(actual interface{}, args ...interface{}) string {
-	valActual := reflect.ValueOf(actual)
-	valExpected := reflect.ValueOf(args[0])
+	valActual := reflect.Indirect(reflect.ValueOf(actual))
+	valExpected := reflect.Indirect(reflect.ValueOf(args[0]))
 
 	typeActual := valActual.Type()
 	typeExpected := valExpected.Type()
@@ -20,7 +20,7 @@ func ShouldLookLike(actual interface{}, args ...interface{}) string {
 		structField := typeExpected.Field(i)
 		expectedField := valExpected.Field(i)
 		// If the field we are examining is the zero value, carry on
-		if reflect.DeepEqual(reflect.Zero(expectedField.Type()), expectedField.Interface()) {
+		if reflect.DeepEqual(reflect.Zero(expectedField.Type()).Interface(), expectedField.Interface()) {
 			continue
 		}
 
