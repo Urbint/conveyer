@@ -19,6 +19,11 @@ func ShouldLookLike(actual interface{}, args ...interface{}) string {
 	for i := 0; i < numFieldsExpected; i++ {
 		structField := typeExpected.Field(i)
 		expectedField := valExpected.Field(i)
+
+		if !expectedField.CanInterface() {
+			continue
+		}
+
 		// If the field we are examining is the zero value, carry on
 		if reflect.DeepEqual(reflect.Zero(expectedField.Type()).Interface(), expectedField.Interface()) {
 			continue
