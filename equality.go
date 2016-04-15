@@ -30,7 +30,7 @@ func ShouldLookLike(actual interface{}, args ...interface{}) string {
 		}
 
 		_, hasField := typeActual.FieldByName(structField.Name)
-		actualField := valExpected.FieldByName(structField.Name)
+		actualField := valActual.FieldByName(structField.Name)
 
 		if !hasField {
 			return fmt.Sprintf(`Type "%s" has no field named "%s" but was expected to`, typeActual.Name(), structField.Name)
