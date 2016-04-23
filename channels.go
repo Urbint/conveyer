@@ -24,3 +24,19 @@ func ShouldHaveReceivedSomethingLike(actual interface{}, args ...interface{}) st
 
 	return Explain(`Channel never emitted the desired value`, args[0], results)
 }
+
+// ShouldReceiveSomethingLike will drain from the channel until it is closed, or it receives
+// the desired value.
+func ShouldReceiveSomethingLike(actual interface{}, args ...interface{}) string {
+	channel := reflect.ValueOf(actual)
+
+	for {
+		rec, isOk := channel.Recv()
+		if !isOk {
+			return "Channel never emitted the desired value"
+		}
+		if ShouldLookLike(rec, args...) == "" {
+			return ""
+		}
+	}
+}
